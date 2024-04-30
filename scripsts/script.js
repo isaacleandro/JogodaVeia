@@ -10,24 +10,47 @@ const winningCombination = [
     [0, 4, 8], [2, 4, 6], //diagonal
 ]
 
+function resetGame() {
+    board.fill('');
+
+    document.getElementById("status").innerText = `Jogador ${currentPlayer} é sua vez!`;
+
+    document.querySelectorAll('.cell').forEach(cell => cell.innerText = "");
+
+    gameActive = true;
+}
 function checkWinner() {
     for (let i = 0; i < winningCombination.length; i++) {
         const [a, b, c] = winningCombination[i];
 
         if (board[a] && (board[a] === board[b] && board[a] === board[c])) {
-            gameActive = false;
             return board[a];
         }
-        return null;
     }
+    return null;
 }
     function handleClick(index) {
-        if (board[index] !== "") return;
+        if (board[index] !== "" || !gameActive) return;
 
         board[index] = currentPlayer;
 
         document.getElementById(`cell-${index}`).innerText = currentPlayer;
 
-        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        const winner = checkWinner();
+
+        if (winner) {
+            document.getElementById("status").innerText = `Jogador ${winner} venceu!`;
+            gameActive = false;
+        } else if (!board.includes("")) {
+            document.getElementById("status").innerText = `Empate!`;
+            gameActive = false;
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+            document.getElementById("status").innerText = `Jogador ${currentPlayer} é sua vez!`;
+        }
+
+        console.log("ganhador: ", winner);
+        
     }
 
