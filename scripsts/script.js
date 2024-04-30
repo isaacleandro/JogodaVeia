@@ -3,6 +3,25 @@ const board = ['', '', '', '', '', '', '', '', ''];
 
 let currentPlayer = 'X';
 let gameActive = true;
+let winnerHistory = [];
+
+function updateGameHistory(winner) {
+ winnerHistory.push(winner);
+
+ renderGameHistory();
+}
+
+function renderGameHistory() {
+  const gameHistoryElement = document.getElementById('winnerHistory');
+  
+  winnerHistoryElement.innerHTML = '';
+
+  winnerHistory.forEach((winner, index) => {
+      const winnerElement = document.createElement('li');
+      winnerElement.innerText = `Jogo ${index + 1}: ${winner}`;
+      winnerHistoryElement.appendChild(winnerElement);
+  });
+}
 
 const winningCombination = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], //horizontal
@@ -41,6 +60,8 @@ function checkWinner() {
         if (winner) {
             document.getElementById("status").innerText = `Jogador ${winner} venceu!`;
             gameActive = false;
+
+            updateGameHistory(winner);
         } else if (!board.includes("")) {
             document.getElementById("status").innerText = `Empate!`;
             gameActive = false;
